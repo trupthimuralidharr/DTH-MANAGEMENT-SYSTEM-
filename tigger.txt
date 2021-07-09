@@ -1,0 +1,19 @@
+
+insert into customer values(511,'Mansingh',9624575624,'mansingh@gmail.com','Delhi','qwerty');
+insert into stb(serial_no,STBtype,cust_id,id,pur_date,add_date) values(1013,'HD',511,106,'2019-09-01','2019-09-02');
+
+"select pack_id,pack_name,pack_cost from package p,stb s where s.serial_no=p.serial_no and cust_id=?';
+
+create table package(pack_id primary key, pack_name varchar(30), SDpack_cost int, HDpack_cost int, 4Kpack_cost int, +HDpack_cost int);
+
+select c.cust_id,s.serial_no,b.bill_id,p.pack_cost from customer c, stb s, bill b, package p where c.cust_id=s.cust_id and b.cust_id=c.cust_id and s.serial_no=p.serial_no and c.phone=?;
+
+update bill set cost =(select sum(p.pack_cost) from customer c, stb s, bill b, package p where c.cust_id=s.cust_id and b.cust_id=c.cust_id and s.serial_no=p.serial_no and c.phone=?) where bill_id=(select b.bill_id from bill b,customer c where c.cust_id=b.cust_id and c.phone=?);
+
+delimiter //
+create procedure calbill(in phone varchar(30))
+begin
+	update bill set cost =(select sum(p.pack_cost) from customer c, stb s, bill b, package p where c.cust_id=s.cust_id and b.cust_id=c.cust_id and s.serial_no=p.serial_no and c.phone=phone) where bill_id=(select b.bill_id from bill b,customer c where c.cust_id=b.cust_id and c.phone=phone);	
+end //
+delimiter ;
+
